@@ -10,27 +10,38 @@
   height:auto;
  }
  form{
-  width:50%;
   background-color:rgb(200,200,200);
+  width:50%;
   margin:20px;
   padding:10px;
  }
 </style>
 <body>
- <form method="POST" action="form2.php">
-  <input type="text" name="data">
-  <input type="submit" value="button">
+ <center>
+ <form method="POST" action="form.php">
+  <input type="submit" value="投稿画面">
  </form>
+ </center>
  <?php
-  $pdo = new PDO ( 'mysql:host=localhost;dbname=php_data;charset=utf8', 'root', '' );
-  foreach ( $pdo->query ( 'select * from php_data' ) as $row ) {
-   echo "<center><form id='data' method='POST'  action='reply.php' ><p>$row[id]:$row[post_data]:$row[regist_data]</p><input type='submit' value='返信'><input type='hidden' name='id' value=$row[id]></form></center>";
+  try{
+   $pdo = new PDO ( 'mysql:host=localhost;dbname=post_data;charset=utf8', 'root', '' );
+   $reply_pdo = new PDO ( 'mysql:host=localhost;dbname=reply_data;charset=utf8', 'root', '' );
+   foreach ( $pdo->query ( 'select * from post_data' ) as $row ) {
+     /*投稿データ一覧か*/
+     echo "<center><form  method='POST'  action='reply.php' ><p>$row[id]:$row[name]:$row[title]:$row[content]:$row[created_at]:$row[updated_at]</p><input type='submit' value='返信'><input type='hidden' name='id' value=$row[id]></form></center>";
+
+    foreach ( $reply_pdo->query ( 'select * from reply_data' ) as $reply_row ) {
+    /*postのidとreplyのidが等しかった時の条件式*/
+    if($row['id'] == $reply_row['post_id']){
+     echo "<center><form><p>{$reply_row['id']}:{$reply_row['post_id']}:{$reply_row['name']}:{$reply_row['content']}:{$reply_row['created_at']}:{$reply_row['update_at']}</p></form></center>";
+     } 
+    }
+   }
   }
-?>
-<?php
-  $pdo = new PDO ( 'mysql:host=localhost;dbname=php_reply_data;charset=utf8', 'root', '' );
-foreach ( $pdo->query ( 'select * from php_reply_data' ) as $row ) {
-  echo "<p>$row[id]:$row[reply_data]:$row[regist_data]</p>";}
+  catch(PDOException $e){
+   print "データベース接続失敗:{.$e->getMessage()}";
+  }
+
  ?>
 </body>
 </html>
