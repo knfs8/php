@@ -3,26 +3,86 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>テスト</title>
-</head>
-
+<head>
 <style>
  body{
   width:100%;
   height:auto;
   padding:0px;
   margin:0px;
-  margin-top:20px;
- }
- form{
-  width:50%;
-  height:auto;
-  padding:20px;
-  background-color:orange;
  }
 
+ #wrapping{
+  width:50%;
+  height:auto;
+  padding:40px;
+  margin:10px auto;
+  background-color:#FFCC00;
+ }
+
+ form{
+  width:100%;
+  height:auto;
+  margin:0px auto;
+ }
+
+ h1{
+  margin:10px auto;
+ } 
+
+ p{
+  margin:0px;
+  padding:0px;
+  float:left;
+  text-size:0.3em;
+ }
+
+ label{
+  clear:left;
+  width:100%;
+  height:auto;
+  margin:2px auto;
+ }
+
+ #content{
+  clear:left;
+  width:80%;
+  height:70px;
+  margin:0px auto;
+ }
+
+ p{
+  float:left;
+  text-size:0.3em;
+ }
+
+ #name,#title{
+  clear:left;
+  width:100%;
+  height:20px;
+  margin:0px auto;
+ }
+
+ #content{
+  clear:left;
+  width:100%;
+  height:70px;
+  margin:0px auto;
+ }
+
+
+ #bt{
+  float:right;
+  width:30px;
+  height:auto;
+  background-color:white;
+ }
+ 
+ 
+/*モーダル表示　displayで表示非表示*/
  #modal{
   z-index:2;
-  display:block;
+  display:none;
   position:fixed;
   top:10%;
   left:25%;
@@ -41,47 +101,53 @@
 </style>
 
 <script type="text/javascript">
+ //モーダル表示off
  function modal_onclick_close(){
-  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal").style.display = "none"; 
  }
- 
  function modal_onclick_send(){
-
+  document.getElementById("modal").style.display = "none"; 
  }
+ //投稿ボタンのモーダル表示on
  function check(){
-
+  document.getElementById("modal").style.display = "block";
+  var name = document.getElementById("name").value;
+  var title = document.getElementById("title").value;
+  var content = document.getElementById("content").value;
+  var text = "name:"+name+"title:"+title+"content:"+content;
+  document.getElementById("modal").innerHTML = "<p>この内容で投稿します。<br>よろしいですか。<br>"+text+"</p><input type='submit' name='submit' value='OK' onclick='modal_onclick_send()'><input type='button' onclick='modal_onclick_close()' value='キャンセル'>";
  }
 
 </script>
 
 <body>
- <center>
+ <div id="wrapping">
  <form method="POST">
- <h1>掲示板</h1>
- <label>名前 
-  <input type="text" name="name">
- </label>
- <br>
- <label>タイトル
-  <input type="text" name="title">
- </label>
- <br>
- <label>内容
-  <input type="text" name="content">
- </label>
- <br>
- <input type="submit" name="submit" value="投稿" onclick="check()">
-</form>
-</center>
-<div id="modal">
- <?php echo "<p>この内容で投稿します。<br>よろしいですか。</p><p><a id='modal-close' onclick='modal_onclick_send()'> OK</a><p><a id='modal-close' onclick='modal_onclick_close()'> キャンセル</a>";?>
-</div>
-<div id="modal-overlay">
-</div>
-
+   <center>   
+     <h1>掲示板</h1>
+   </center>
+   <label>
+     <p>名前</p>
+     <input type="text" name="name" id="name">
+   </label>
+   <br>
+   <label>
+     <p>タイトル</p>
+     <input type="text" name="title" id="title">
+   </label>
+   <label>
+     <p>内容</p>
+     <input type="text" name="content" id="content">
+   </label>
+   <br>
+   <input type="button" id="bt" value="投稿" onclick="check()">
+   <div id="modal-overlay">
+   </div>
+   <div id="modal">
+   </div>
+ </form>
 
 <?php
-
  try{
   $pdo = new PDO('mysql:host=localhost;dbname=post_data;charset=utf8','root','');
  if(!empty($_POST["submit"])){
@@ -104,7 +170,6 @@
   print "データベース接続失敗:{.$e->getMessage()}";
  }
 ?>
-
-
+ </div>
 </body>
 </html>
