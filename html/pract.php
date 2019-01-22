@@ -38,7 +38,7 @@
  }
  
  .reply{
-  margin:5px auto;
+  margin:-15px auto 20px auto;
   background-color:white;
   width:80%;
   height:auto;
@@ -49,29 +49,33 @@
  #bt{
   width:50px;
   height:30px;
-  float:right;
   margin:5px 0px;
+  float:right;
  }
 
  .id,.name,.created,.update{
-  font-size:10px;
+  font-size:14px;
   width:auto;
   height:auto;
   float:left;
+  margin:0px;
+  padding:0px;
  }
 
  .title{
   clear:left;
-  font-size:10px;
+  font-size:14px;
   width:auto;
   height:auto;
+  margin:0px;
+  padding:0px;
  }
 
  .content{
-  overflow:hidden;
-  width:80%;
+  width:100%;
   height:auto;
-  margin:10px auto;
+  margin:20px auto;
+  overflow:hidden;
  }
 
  .reply-bt{
@@ -94,14 +98,16 @@
    try{
     $pdo = new PDO ( 'mysql:host=localhost;dbname=post_data;charset=utf8', 'root', '' );
     $reply_pdo = new PDO ( 'mysql:host=localhost;dbname=reply_data;charset=utf8', 'root', '' );
-    foreach ( $pdo->query ( 'select * from post_data' ) as $row ) {
+    foreach ( $pdo->query ( 'select * from post_data' ) as $postRow ) {
      /*投稿データ一覧*/
-    echo "<form  method='POST'  action='reply.php' class='post_data'><p class='name'>$row[name]</p><p class='created'>$row[created_at]</p><p class='update'>$row[updated_at]</p><br><p class='title'>$row[title]</p><center><p class='content'>'$row[content]</p></center><input type='submit' class='reply-bt' value='返信'><input type='hidden' name='id' value=$row[id]></form>";
+     $postTime = date('Y/m/d',strtotime($postRow['created_at']));
+     echo "<form  method='POST'  action='reply.php' class='post_data'><p class='name'>$postRow[name]</p><p class='created'>$postTime</p><br><p class='title'>$postRow[title]</p><center><p class='content'>'$postRow[content]</p></center><input type='submit' class='reply-bt' value='返信'><input type='hidden' name='id' value=$postRow[id]></form>";
 
-    foreach ( $reply_pdo->query ( 'select * from reply_data' ) as $reply_row ) {
+    foreach ( $reply_pdo->query ( 'select * from reply_data' ) as $replyRow) {
     /*postのidとreplyのidが等しかった時の条件式*/
-     if($row['id'] == $reply_row['post_id']){
-      echo "<form class='reply'><p class='name'>{$reply_row['name']}</p><p class='created'>{$reply_row['created_at']}</p><p class='update'>{$reply_row['update_at']}</p><center><p class='content'>{$reply_row['content']}</p></center></form>";
+     if($postRow['id'] == $replyRow['post_id']){
+      $replyTime = date('Y/m/d',strtotime($replyRow['created_at']));
+      echo "<form class='reply'><p class='name'>{$replyRow['name']}</p><p class='created'>$replyTime</p><center><p class='content'>{$replyRow['content']}</p></center></form>";
       } 
      }
     }

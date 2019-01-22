@@ -23,7 +23,7 @@
  #postdata{
   width:80%;
   height:auto;
-  margin:10px auto;
+  margin:20px auto;
   padding:20px;
   background-color:white;
  }
@@ -31,7 +31,7 @@
  #replydata{
   width:80%;
   height:auto;
-  margin:10px auto;
+  margin:-15px auto 20px auto;
   padding:20px;
   background-color:white;
 }
@@ -60,7 +60,7 @@
 
  .content{
   overflow:hidden;
-  width:80%;
+  width:100%;
   height:auto;
   margin:10px;
  }
@@ -113,11 +113,24 @@
   border:1px black solid;
   background:white;
  }
- #modal-close{
-  border-bottom:solid 1px black;
+
+ #modal p {
+  width:auto;
+  clear:left;
+  float:none;
  }
- #modal-close:hover{
-  color:blue;
+
+ #okButton{
+  width:100px;
+  float:left;
+  margin:5px 0px 5px 30px ;
+ }
+ 
+ #cancelButton{
+  width:100px;
+  height:auto;
+  float:right;
+  margin:5px 30px 5px 0px;
  }
 </style>
 
@@ -131,8 +144,9 @@
   $id = $_POST["id"];
   try{
    $pdo = new PDO('mysql:host=localhost;dbname=post_data;charset=utf8','root','');
-   foreach ( $pdo->query ( "select * from post_data where id=".$id ) as $row ) {
-    echo "<form id='postdata'><p class='created'>$row[created_at]</p><p class='id'>$row[id]</p><p class='name'>$row[name]</p><p class='title'>$row[title]</p><center><p class='content'>$row[content]</p></center></form>";
+   foreach ( $pdo->query ( "select * from post_data where id=".$id ) as $postRow ) {
+    $postTime = date('Y/m/d',strtotime($postRow['created_at'])); 
+    echo "<form id='postdata'><p class='name'>$postRow[name]</p><p class='created'>$postTime</p><p class='title'>$postRow[title]</p><center><p class='content'>$postRow[content]</p></center></form>";
    }
   }
   catch(PDOException $e){
@@ -143,7 +157,12 @@
     $pdo = new PDO('mysql:host=localhost;dbname=reply_data;charset=utf8','root','');
     /*返信データの表示*/
     foreach ( $pdo->query ( "select * from reply_data where post_id=".$id ) as $replyRow ) {
-      echo "<form id='replydata'><p class='created'>$replyRow[created_at]</p><p class='id'>$replyRow[post_id]</p><p class='name'>$replyRow[name]</p><center><p class='content'>$replyRow[content]</p></center></form>";
+      //時刻データの出力変更
+      $replyTime=$replyRow['created_at'];
+      $time= date('Y/m/d', strtotime($replyTime));
+
+      //データの出力
+      echo "<form id='replydata'><p class='name'>$replyRow[name]</p><p class='created'>$time</p><center><p class='content'>$replyRow[content]</p></center></form>";
      }
    if(!empty($_POST["submit"])){
     $stmt = $pdo->prepare("INSERT INTO reply_data (post_id,name,content,created_at,update_at) VALUES (:post_id,:name,:content,:created_at,:update_at)");
@@ -151,7 +170,8 @@
     $name = $_POST["name"];
     $content = $_POST["reply_data"];
     $created_at = date("Y-m-d H:i:s");
-    $update_at = date("Y-m-d H:i:s");
+    $updated_at = date("Y-m-d H:i:s");
+
     $stmt->bindValue(':post_id',$post_id,PDO::PARAM_INT);
     $stmt->bindParam(':name',$name,PDO::PARAM_INT);
     $stmt->bindParam(':content',$content,PDO::PARAM_INT);
@@ -189,9 +209,8 @@
        document.getElementById("modal").style.display = "block";
        var name=document.getElementById("reply_name").value;
        var reply_data=document.getElementById("reply_data").value;
-       var text="name:"+name+"reply_data:"+reply_data;
-       console.log(text);
-       document.getElementById("modal").innerHTML="<p>この内容で投稿します。<br>よろしいですか。<br>"+text+"</p><input type='submit' name='submit' value='OK' onclick='modal_onclick_send()'><p><a id='modal-close' onclick='modal_onclick_close()'> キャンセル</a>";
+       var text="name:"+name+"&nbsp"+"reply_data:"+"&nbsp"+reply_data;
+       document.getElementById("modal").innerHTML="<center><p>この内容で投稿します。<br>よろしいですか。<br>"+text+"</p></center><br><input type='submit' name='submit' value='OK' onclick='modal_onclick_send()' id='okButton'><input type = 'button' id='cancelButton' onclick='modal_onclick_close()'  value='キャンセル'>";
      }
    </script>
  </form>

@@ -92,12 +92,31 @@
   border:1px black solid;
   background:white;
  }
+ #modal p{
+  width:auto;
+  height:auto;
+  float:none; 
+}
  #modal-close{
   border-bottom:solid 1px black;
  }
  #modal-close:hover{
   color:blue;
  }
+
+ .okButton{
+  width:100px;
+  float:left;
+  margin:5px 0px 5px 30px;
+ }
+
+ .cancelButton{
+  width:100px;
+  height:auto;
+  float:right;
+  margin:5px 30px 5px 0px;
+ }
+
 </style>
 
 <script type="text/javascript">
@@ -114,8 +133,8 @@
   var name = document.getElementById("name").value;
   var title = document.getElementById("title").value;
   var content = document.getElementById("content").value;
-  var text = "name:"+name+"title:"+title+"content:"+content;
-  document.getElementById("modal").innerHTML = "<p>この内容で投稿します。<br>よろしいですか。<br>"+text+"</p><input type='submit' name='submit' value='OK' onclick='modal_onclick_send()'><input type='button' onclick='modal_onclick_close()' value='キャンセル'>";
+  var text = "name:"+name+"&nbsp"+"title:"+title+"&nbsp"+"content:"+content;
+  document.getElementById("modal").innerHTML = "<center><p>この内容で投稿します。<br>よろしいですか。<br>"+text+"</p></center><br><input type='submit' name='submit' class='okButton' value='OK' onclick='modal_onclick_send()'><input type='button' class='cancelButton'onclick='modal_onclick_close()' value='キャンセル'>";
  }
 
 </script>
