@@ -1,0 +1,305 @@
+Apache を起動し、webページを確認できる点まで行なった
+textデータをphpを利用してページへ飛ばす物を作成途中
+
+Whom …現在のユーザー検索
+ドキュメントルート…ログインしている人（所有権を所持している人）
+Chown…指定ファイルなどのユーザー所有権の変更
+sudo /etc/rc.d/init.d/httpd start…Apache 起動
+ps -ef | grep httpd | grep -v grep…起動確認	
+Apache 404エラー出た時、Options +Indexes +FollowSymLinksに変更したら起動した
+
+<http.conf編集によるエラー>
+ Options Includes ExecCGI FollowSymLinks
+  ではなく、Options +Indexes +FollowSymLinks
+
+ll…command内のファイル数検索
+
+Curl …url 検索
+
+rm -f /var/www/html/*…データ削除
+
+ターミナル拡張
+
+Sudo service httpd start 起動
+
+<mysql>
+sudo mysql -u root -p 起動
+Create database 名前
+Create table 名前(中身,…)
+
+ALTER TABLE [テーブル名] ADD [カラム名] [データ型] [オプション]; データ追加
+
+
+Insert文 テーブルにデータ追加する
+INSERT INTO db_name.tbl_name (col_name1, col_name2, ...)
+  VALUES (value1, value2, ...);
+Insert into データ名、（カラム名）　values(値);
+データの追加
+
+select * from php_data;
+テーブル内のデータ参照
+Alter table テーブル名　modify カラム名　変更後のカラム定義
+
+縦軸　レコード
+ID 主キー
+リレーション　テーブル間の関係性
+データベース　テーブルとリレーションとの関係性
+
+regist は日時
+
+Selsct * from データ名
+
+Pro …php data objects データベース接続
+DSN …data source name 接続や送信するときにデータを色々書いている
+
+php→pdo接続によってデータベースにinsertする
+
+$dbh = new PDO('mysql:host=localhost;dbname=名前’, …);…データベース接続
+
+Prepare 実行待ち
+Query 実行
+PDO::PARAM_STR 変数の値を文字列として扱う
+PDO::PARAM_INT 変数の値を数値として扱う
+:nameなど　パラメーター
+PDO::FETCH_ASSOC 連想配列として取得する
+
+Try{} catch…tryで取得 catchでエラーを返す
+bindParam …PDO::PARAM_INTを指定しても文字列として扱われる
+bindValue …数値
+select Host, User, Password from mysql.user;…ユーザー検索
+
+<つまづいたところ>
+Insert のところ
+時間表示→tdate("Y-m-d H:i:s”);を利用する date()の中身は数値の数(time()は秒単位でUNIX タイムスタンプを取得した数値なので経過時間の数値になってしまう)
+
+
+sudo su 権限変更
+cd /var/log/httpd/
+tail -f error_log …エラー検索
+
+ホスト
+ユーザー指定
+
+ALTER TABLE Customer MODIFY Addr char(30);
+…データ変更
+TRUNCATE TABLE php_data;…テーブルデータ削除
+
+ select count(id) from php_data;…データ数検索
+
+<terminal>
+Sudo 変更権限
+
+エラー設定
+sudo su 権限変更
+cd /var/log/httpd/
+tail -f error_log …エラー検索
+
+
+Id連番->テーブル定義でプライマリーキーを設定した後にauto incrementを設定する。
+返信機能でページに飛ぶ時、一つのデータだけ取り込む→<input type>でデータから取得したidのみを送信。select*from テーブル名　whereの条件式に取得データを入れ込む
+
+
+
+<input type =“hidden”> …非表示データを送信する
+Alter table テーブル名　change カラム名　カラム名　型　auto_increment…連番設定の追加
+Select * from php_reply_data where 条件式…条件式に当てはまるもののデータ検索
+
+
+リポジトリ設定
+Github作成場所→他にファイルを作ってその中に作る　rm -rf .gitでファイル削除
+commitできない→git先sshの場合キー設定が必要。httpの場合鍵の設定は不要
+Pushができない→usernameを変更
+作成データの移行→scp データ先（scp -i ~/.ssh/201812_intern.pem -r ec2-user@18.179.137.207:/var/www/html ./ )
+masterの更新→git  pull× git fetch
+データベース一つだけデータを表示するidの文字連結
+
+返信フォームの方でinsertする→次回
+もしくはtop画面でボタンを押した場合のし処理で判別する
+ 
+<コマンド>
+Scp…コピー
+scp -i ~/.ssh/201812_intern.pem -r ec2-user@18.179.137.207:/var/www/html ./
+
+<Git コマンド>
+git init …リポジトリ作成/再初期化
+git init --bare --shared…リモートリポジトリ作成共有用
+rm -rf .git…gitの削除
+
+Usernameと、url設定がhttpじゃなくてssh設定だったからつまづいた
+Ssh設定だと、鍵が必要になる
+
+
+Cd gitリポジトリ
+Git init 初期化
+Git add データ
+Git commit -m “コメント”
+Git remote add origin リポジトリ情報(URL)…ファイルをインデックスに追加、コミットする
+Git push origin master …データのプッシュ
+
+
+vim .git/configで設定変更　urlとか
+~/.netrc machine github.com
+login Anorlondo448
+password xxxxx
+のユーザー設定の変更
+
+リポジトリの初期化
+
+Master に更新したデータを持ってくる必要がある
+毎回更新する必要はないが、リポジトリを共有する場合は更新が必要
+
+git pull origin master --force 
+
+Git の更新
+Git pull→git fetch
+Git reset —hard origin/branch_name
+
+<mysql>
+ALTER TABLE Customer MODIFY Addr char(30);
+…データ変更
+TRUNCATE TABLE php_data;…テーブルデータ削除
+
+ select count(id) from php_data;…データ数検索
+select Host, User, Password from mysql.user;…ユーザー検索
+
+sudo mysql -u root -p 起動
+Desc テーブル名…テーブル設定の参照
+select * from php_data; テーブル内のデータ参照
+TRUNCATE TABLE php_data;…テーブルデータ削除
+Alter table テーブル名 add primary key…プライマリーキー追加
+Alter table テーブル名　change カラム名　カラム名　型　auto_increment…連番設定の追加
+alter table customer modify add カラム型;…データ変更
+Select * from php_reply_data where 条件式…条件式に当てはまるもののデータ検索
+
+Html投稿テキストフォームをPOST→php POSTデータを取得　リンクへ飛ぶ
+<form>にはactionをつけないでphpで画面変移を行う
+
+
+postでまたデータベースが消えちゃうからそれをもう一度hiddenで送る必要がある
+
+ 返信の文を投稿のすぐ下に表示させる条件式でエラー→条件式の中の変数指定の””がなかったためうまく読み取れていなかった
+
+Jsモーダルボタンを押したら表示するということができなかった
+<?php
+   ポストデータを出力
+　モーダル表示(Onの場合)
+?>
+if(!empty[“モーダルid(Okの場合)”]){インソート}
+
+登録時のモーダル表示、返信画面に返信するデータと返信されたデータの表示を行った。
+モーダル表示でjsを利用してid指定して値取得を行おうとしたが、うまくできなかった。次回にモーダル表示時にデータ表示されるように行いたい
+
+<躓いた点>
+モーダル表示させ、submitさせてもデータがインソートされない（hiddenで全部のデータをもう一度送信しなければならないのか？）
+→postするformの中に入れることで簡単にデータが飛ばせる
+
+モーダルでデータを表示させる
+→モーダル表示するときはbuttonタグで行っているため、Jsで行ってもデータが入力されない
+データが空の状態になる
+
+<モーダル表示からインソートする順番>
+buttonでモーダル表示をする→モーダル表示でOKを押すとinputタグのnameを認識する→phpでpostされたnameを受けろとり、インソートがされる
+
+<気をつける点>
+タグがbuttonではデータが取得できない
+getElementsByNameだと配列と認識してしまうのでそれぞれのinput内にidづけした方がやりやすい
+
+<躓いたところ>
+Contentだけデータが取得されない(エラーも表示されない)→’のいちがずれていて表示がされなかった
+Cssで左詰で改行した文を左に詰めようとするとずれる→全体でcenter要素でくくっていたため、clearで回りこみ解除し、marginの左右autoで真ん中の位置に治した
+
+次回では、トップ画面で返信投稿とpostデータの間隔を狭める、投稿日付を//で表示変更を行う
+
+Overflow…範囲内に収まらない時の指定
+Clear…回りこみの解除設定
+Vim
+
+作成日時のNotice 〜undefineのエラー表示が消えない→strtotime(‘変更形式’,’$変数’)
+Mysqlから取得した元となるデータのシングルコーテーションが必要
+
+モーダルが表示されないー＞　”ミス
+
+Larval phpのフレームワーク
+
+Composerを依存パッケージの管理に使用している
+→composer をインストールする
+
+Cd ~/.ssh
+Ssh ssh ec2-・・・
+Sshのプロトコルを利用してサーバーにログインしている
+
+コマンドは/bin/や/usr/bin/などの中に収められた実行ファイルという形で提供されている
+
+躓いた点
+Composer をどこに移動するか
+サーバー内に入れるって何？
+
+
+サーバーにアクセスできないことがあった
+エラーコード
+→ssh_exchange_identification read connection reset by peer
+固定ipが変更されたのか？laravelをインストール時に行ってこうなった
+Composer をlocalのbinに写したことが原因？]
+Laravelのインストール時に問題がありそう
+
+Laravelインストール時にフリーズする
+-＞末尾に-vvvでインストール内容を表示
+reading で止まっている
+→メモリ不足
+
+ composer create-project --prefer-dist laravel/laravel ファイル名
+で試す
+
+Phpがインストールできない
+リポジトリを新しく作ってインストールするのでなく、phpを決してバージョンを指定してインストールする
+→Apacheのバージョンが足りていなかった
+→apacheを削除、インストールし直す
+→phpを削除、新しいバージョンをインストールした
+
+
+
+sudo yum -y install php56 php56-devel php56-pdo php56-mysqlnd php56-mbstring php56-xml php56-
+
+
+
+
+
+Laravelの新しいファイルが作成されない
+→swapのメモリ不足
+
+
+Free -m メモリ検索
+ls ファイル表示
+
+<躓いた所>
+権限の授与ができていなかった
+Logが書き込めないというエラー
+→laravelの権限を授与できていなかった
+->https://qiita.com/naka46/items/e562e38764441d2b5b4a
+
+Ll パーミッションの確認
+Ls -l
+
+[権限の見方]
+-ファイル　dディレクトリ l真んボリックリンク
+2~4文字は所有者に対する権限
+5~7文字はファイル所有グループに対する権限
+8~10文字はその他に対する権限
+
+権限変更
+Chord モード数値　ファイル
+
+モード4 r 読み取り　2 w 書き込み　1 x 実行
+777は所有者、グループ、その他それぞれに読み取り書き込み実行ができる権限を授与するという意味
+
+Chmod -R 777 …全てのユーザにアクセス権限を与える
+Chmod chown
+
+Laravelとデータベース接続
+Laravelでdatabase.phpでデータベース接続するデータの接続方法を設定
+Envでデータベースの環境設定を行い、migration(データベース管理)でmysqlのデータに移動させる
+
+php artisan make:migration 【マイグレーションファイル名】
+(何を・どのテーブル・どうするか)
+
+→dataBaseにデータが入ったmigrationができる
